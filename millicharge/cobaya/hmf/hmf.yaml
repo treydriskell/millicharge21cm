@@ -1,0 +1,6 @@
+zarr: null
+hmf_kwargs: {}
+params:
+  omegabh2: a
+  omegach2: b
+  H0: c
