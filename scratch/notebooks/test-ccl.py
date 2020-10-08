@@ -72,16 +72,16 @@ E_of_z = np.flip(E_of_z)
 
 kmax = 100
 k_arr = np.logspace(-5, 2, 1000)
-z_pk = np.array([60.,])
-class_pk_lin = cl.get_pk_array(k_arr, z_pk, 1000, 1, False)
+z_pk = np.linspace(0., 20., 64)
+class_pk_lin = cl.get_pk_array(k_arr, z_pk, 1000, 64, False).reshape([64, 1000])[::-1, :]
 
 print('setting background quantities')
 cosmo._set_background_from_arrays(a_array=a, chi_array=distance, hoh0_array=E_of_z)
 
 print(f'setting p(k) at z={z_pk} with {class_pk_lin}')
-cosmo._set_linear_power_from_arrays(1./(1 + z_pk), k_arr, class_pk_lin)
+cosmo._set_linear_power_from_arrays(1./(1 + z_pk[::-1]), k_arr, class_pk_lin)
 
 print('computing HMF:')
-# compute HMF
+# compute HMF                                                                                                                                                                                                      
 mdef = ccl.halos.MassDef(500, 'critical')
 hmf = ccl.halos.MassFuncTinker08(cosmo, mass_def=mdef)
