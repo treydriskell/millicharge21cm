@@ -39,9 +39,9 @@ class LCDM:
         }
 
 
-m_dmeff = 1.0  # GeV
-sigma_dmeff = 1e-41  # cm^2
-Vrel_dmeff = 30 # km/s at z ~ 1010
+# m_dmeff = 1.0  # GeV
+# sigma_dmeff = 1e-41  # cm^2
+# Vrel_dmeff = 30 # km/s at z ~ 1010
 params = LCDM.class_params()
 
 z_pk = 60.
@@ -75,13 +75,18 @@ k_arr = np.logspace(-5, 2, 1000)
 z_pk = np.linspace(0., 20., 64)
 class_pk_lin = cl.get_pk_array(k_arr, z_pk, 1000, 64, False).reshape([64, 1000])[::-1, :]
 
-print('setting background quantities')
+# print('setting background quantities')
 cosmo._set_background_from_arrays(a_array=a, chi_array=distance, hoh0_array=E_of_z)
 
-print(f'setting p(k) at z={z_pk} with {class_pk_lin}')
+# print(f'setting p(k) at z={z_pk} with {class_pk_lin}')
 cosmo._set_linear_power_from_arrays(1./(1 + z_pk[::-1]), k_arr, class_pk_lin)
 
-print('computing HMF:')
+# print('computing HMF:')
 # compute HMF                                                                                                                                                                                                      
 mdef = ccl.halos.MassDef(500, 'critical')
-hmf = ccl.halos.MassFuncTinker08(cosmo, mass_def=mdef)
+hmf = ccl.halos.MassFuncTinker10(cosmo, mass_def=mdef)
+
+Mgrid = np.logspace(6, 12, 100)
+
+print(f'Delta_m: {hmf._get_Delta_m(cosmo, 1.0)}')
+print(hmf.get_mass_function(cosmo, Mgrid, 0.1))
