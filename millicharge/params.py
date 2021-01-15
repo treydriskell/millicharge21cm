@@ -60,7 +60,7 @@ class DMBParams(LCDMParams):
         self.omega_dmb = self.omega_cdm
         self.omega_cdm = 1e-10
         self.m_dmb = 1.0  # GeV
-        self.sigma_dmb = 1e-41  # cm^2
+        self.sigma_dmb = 1e-40  # cm^2
         self.Vrel_dmb = 30  # km/s at z ~ 1010
         self.n_dmb = -4
 
