@@ -1,0 +1,25 @@
+all:
+  initial_redshift: 100  # also set this as zmax 
+  epsilon_dt: 0.001
+#   epsilon_dt: 0.01
+  hmf_model: Tinker10
+  verbose: false
+
+dmb_dmb:
+  label: 'DMB; DMB p(k)'
+  include_dm: true
+  sigma_dmb: 1e-40
+  m_dmb: 1.
+  use_classy_pk: true
+
+lcdm:
+  label: 'LCDM'
+  include_dm: false
+
+dmb_lcdm:
+  label: 'DMB; LCDM p(k)'
+  include_dm: true
+  sigma_dmb: 1e-40
+  m_dmb: 1.
+  use_classy_pk: false
+
