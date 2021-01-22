@@ -118,6 +118,6 @@ class SimGroup:
         return fig
 
     def test(self):
-        for sim in self.global_sims:
+        for name, sim in self.global_sims.items():
             test_sim(sim)
 
