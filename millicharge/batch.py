@@ -27,6 +27,16 @@ def get_global_sim(info, **kwargs):
     return ares.simulations.Global21cm(**ares_params.all_kwargs)
 
 
+def test_sim(sim):
+    halos = sim.pops[0].halos
+    for attr in ["tab_k_lin", "tab_ps_lin", "tab_ngtm", "tab_M"]:
+        val = getattr(halos, attr)
+        try:
+            assert np.isnan(val).sum() == 0
+        except AssertionError:
+            raise(f'Failed at {attr}, which has some nans.')
+
+
 class Worker:
     def __init__(self, output_root, clobber=True):
         self.output_root = Path(output_root)
@@ -106,4 +116,8 @@ class SimGroup:
 
         ax.legend()
         return fig
+
+    def test(self):
+        for sim in self.global_sims:
+            test_sim(sim)
 

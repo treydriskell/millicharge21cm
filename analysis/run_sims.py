@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     pool = schwimmbad.choose_pool(mpi=args.mpi, processes=args.n_cores)
     
-    main(args.filename, pool)    
+    main(args.filename, pool)
     
     
     
