@@ -1,6 +1,8 @@
 import yaml
 import numpy as np
 from pathlib import Path
+import pandas as pd
+import hvplot.pandas
 
 import ares
 from millicharge.params import LCDMParams, DMBParams, ARESParams
@@ -117,6 +119,14 @@ class SimGroup:
 
         ax.legend()
         return fig
+
+    def history_df(self, name):
+        history = self.analysis[name].history
+        return pd.DataFrame({k: history[k] for k in history if len(history[k]) == len(history['z'])})
+
+    def history_plot(self, name, component):
+        df = self.history_df(name)
+        return df.hvplot('z', component, logx=True, logy=True)
 
     def test(self):
         for name, sim in self.global_sims.items():
