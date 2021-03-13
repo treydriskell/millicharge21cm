@@ -11,7 +11,10 @@ from millicharge.params import LCDMParams, DMBParams, ARESParams
 def get_ares_params(info, **kwargs):
     info = dict(info)
     cosmo_kwargs = dict()
-    cosmo_kwargs["zmax"] = kwargs.pop("initial_redshift", 100)
+    if 'initial_redshift' in kwargs.keys():
+        cosmo_kwargs["zmax"] = kwargs['initial_redshift']
+    else: 
+        cosmo_kwargs["zmax"] = 100
     if info["include_dm"]:
         for k in ["sigma_dmb", "m_dmb"]:
             if k in info:
