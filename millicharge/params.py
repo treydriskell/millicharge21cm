@@ -80,7 +80,7 @@ class ARESParams:
         use_classy_pk=False,
         include_dm=False,
         verbose=True,
-        initial_redshift=60,
+        initial_redshift=100,
         initial_timestep=0.001,
         cosmology_package="ccl",
         hmf_package="ccl",
@@ -112,6 +112,9 @@ class ARESParams:
         ]:
             self.kwargs[kw] = kwargs.get(kw, eval(kw))
 
+        if "pop_ion_src_igm{1}" in kwargs.keys():
+            self.kwargs["pop_ion_src_igm{1}"] = kwargs["pop_ion_src_igm{1}"]
+            
         self.include_dm = self.kwargs["include_dm"]
         if self.include_dm and not isinstance(cosmo, DMBParams):
             raise ValueError("Must pass DMBParams if including DM.")
