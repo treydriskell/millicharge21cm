@@ -3,6 +3,6 @@ from setuptools import setup
 setup(name='millicharge',
       packages=['millicharge'],
       install_requires=[
-        "astropy",
+        "astropy", 'pandas', 'numpy', 'hvplot'
     ],
 )
