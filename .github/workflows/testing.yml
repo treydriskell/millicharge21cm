@@ -44,14 +44,13 @@ jobs:
 
     - name: Install ARES
       run: |
-        git clone https://github.com/timothydmorton/ares
+        git clone -b dm_evolution-newccl https://github.com/timothydmorton/ares
         cd ares
-        git checkout dm_evolution-newccl
         pip install .
         python remote.py
         cd ..
       env: 
-        ARES: $HOME/ares
+        ARES: $${{ github.workspace }}/ares
 
     - name: install
       run: |
@@ -62,4 +61,4 @@ jobs:
         pytest -vv millicharge
       env:
         PYTEST_ADDOPTS: "--color=yes"
-        ARES: $HOME/ares
+        ARES: ${{ github.workspace }}/ares
