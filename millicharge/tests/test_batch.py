@@ -2,12 +2,13 @@ from pkg_resources import resource_filename
 
 from millicharge.batch import SimGroup
 
-test_file = resource_filename('millicharge', 'tests/test.yaml')
+test_file = resource_filename("millicharge", "tests/test.yaml")
+
 
 def test_initialize():
     sims = SimGroup(test_file)
     sims.test()
-    
+
 
 def test_sims():
     sims = SimGroup(test_file)
@@ -17,7 +18,7 @@ def test_sims():
     pool = Pool(3)
     sims.run(pool=pool)
 
-    plot = sims.global_signature()
+    plot = sims.global_signature()  # TODO: add values check
 
     for name in sims.analysis.keys():
         assert sims.history_df(name).isnull().sum().sum() == 0
