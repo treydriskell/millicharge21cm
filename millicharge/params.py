@@ -122,7 +122,7 @@ class ARESParams:
         if not self.include_dm and isinstance(cosmo, DMBParams):
             self.include_dm = True
             self.kwargs["include_dm"] = True
-            print("Using DMBParams.  Setting include_dm to True.")
+            # print("Using DMBParams.  Setting include_dm to True.")
 
         self._classy = None
 
