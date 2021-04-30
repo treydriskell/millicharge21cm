@@ -42,6 +42,11 @@ jobs:
       env:
         MATRIX_OS: ${{ matrix.os }}
 
+    - name: install camb and hmf
+      run: |
+        pip install camb
+        pip install hmf
+
     - name: Install ARES
       run: |
         git clone -b dm_evolution-newccl https://github.com/timothydmorton/ares
