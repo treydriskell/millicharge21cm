@@ -48,7 +48,10 @@ jobs:
         cd ares
         git checkout dm_evolution-newccl
         pip install .
+        python remote.py
         cd ..
+      env: 
+        ARES: $HOME/ares
 
     - name: install
       run: |
@@ -59,4 +62,4 @@ jobs:
         pytest -vv millicharge
       env:
         PYTEST_ADDOPTS: "--color=yes"
-        ARES: ~/ares
+        ARES: $HOME/ares
