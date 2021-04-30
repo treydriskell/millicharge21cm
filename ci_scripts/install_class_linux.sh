@@ -2,6 +2,7 @@
 
 git clone https://github.com/veragluscevic/class_public.git
 cd class_public
+git fetch
 git checkout dmb
 make -j4
 

@@ -5,6 +5,7 @@ export CONDA_BUILD_SYSROOT=/
 rm -rf class_public
 git clone --depth=1000 https://github.com/veragluscevic/class_public.git
 cd class_public
+git fetch
 git checkout dmb
 
 sed -i.bak -e 's/^CC/#CC/g' Makefile
