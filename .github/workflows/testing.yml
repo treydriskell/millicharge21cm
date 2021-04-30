@@ -25,9 +25,9 @@ jobs:
         channel-priority: strict
         show-channel-urls: true
 
-    - name: install ccl
+    - name: install ccl & cython
       run: |
-        conda install pip compilers pytest pyccl
+        conda install pip compilers pytest pyccl cython
       env:  
         MATRIX_OS: ${{ matrix.os }}
 
