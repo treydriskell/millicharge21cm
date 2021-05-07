@@ -15,7 +15,10 @@ def get_ares_params(info, **kwargs):
         cosmo_kwargs["zmax"] = kwargs['initial_redshift']
     else: 
         cosmo_kwargs["zmax"] = 100
-    if info["include_dm"]:
+
+    include_dm = kwargs.get('include_dm', False) or info['include_dm']
+
+    if include_dm:
         for k in ["sigma_dmb", "m_dmb"]:
             if k in info:
                 cosmo_kwargs[k] = float(info.pop(k))
