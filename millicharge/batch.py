@@ -5,29 +5,28 @@ import pandas as pd
 import hvplot.pandas
 
 import ares
-from millicharge.params import LCDMParams, DMBParams, ARESParams
+from millicharge.params import LCDMParams, DmeffParams, ARESParams
 
 
 def get_ares_params(info, **kwargs):
-    info = dict(info)
-    cosmo_kwargs = dict()
-    if 'initial_redshift' in kwargs.keys():
-        cosmo_kwargs["zmax"] = kwargs['initial_redshift']
-    else: 
-        cosmo_kwargs["zmax"] = 100
-
-    include_dm = kwargs.get('include_dm', False) or info['include_dm']
+    """
+    info : dictionary of arguments given by name 
+    kwargs: dictionary of keyword argument given by 'all' in the yaml
+    """
+    ares_kws = {**kwargs, **dict(info)} # takes info's values for overlapping keys  
+    cosmo_kwargs = {}
+    cosmo_kwargs["zmax"] = ares_kws.get('initial_redshift', 100)
+    include_dm = ares_kws.get('include_dm', False)
 
     if include_dm:
-        for k in ["sigma_dmb", "m_dmb"]:
-            if k in info:
-                cosmo_kwargs[k] = float(info.pop(k))
-        cosmo_params = DMBParams(**cosmo_kwargs)
+        for k in ["sigma_dmeff", "m_dmeff"]:
+            if k in ares_kws:
+                cosmo_kwargs[k] = float(ares_kws.get(k))
+            else:
+                print('using default values for {}'.format(k)) # TODO: remove when tests added
+        cosmo_params = DmeffParams(**cosmo_kwargs)
     else:
         cosmo_params = LCDMParams(**cosmo_kwargs)
-
-    ares_kws = kwargs
-    ares_kws.update(info)
     return ARESParams(cosmo_params, **ares_kws)
 
 
@@ -121,8 +120,43 @@ class SimGroup:
 
         for name, sim in self.analysis.items():
             label = self.info[name]['label']
-            sim.GlobalSignature(ax=ax, label=label)
+            sim.GlobalSignature(ax=ax, label=label, **kwargs)
 
+        ax.legend()
+        return fig
+
+    def _label_to_latex(self, name):
+        sigma_dmeff = self.info[name]['sigma_dmeff']
+        m_dmeff = self.info[name]['m_dmeff']
+        return r'$\sigma_{\chi} =' + str(sigma_dmeff) + r'$; $m_{\chi} =' + str(m_dmeff) + '$'
+
+    def fixed_sigma_gs(self, sigma, ax=None, figsize=(10, 8)):
+        if ax is None:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(1, 1, figsize=figsize)
+        else:
+            raise NotImplementedError
+
+        for name, sim in self.analysis.items():
+            if self.info[name]['sigma_dmeff'] == sigma:
+                label = self._label_to_latex(name)
+                sim.GlobalSignature(ax=ax, label=label)
+
+        ax.legend()
+        return fig
+
+    def fixed_mass_gs(self, mass, ax=None, figsize=(10, 8)):
+        if ax is None:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(1, 1, figsize=figsize)
+        else:
+            raise NotImplementedError
+
+        for name, sim in self.analysis.items():
+            if math.isclose(self.info[name]['m_dmeff'], mass):
+                label = self._label_to_latex(name)
+                sim.GlobalSignature(ax=ax, label=label)
+                
         ax.legend()
         return fig
 

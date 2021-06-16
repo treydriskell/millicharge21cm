@@ -52,24 +52,24 @@ class LCDMParams:
         }
 
 
-class DMBParams(LCDMParams):
+class DmeffParams(LCDMParams):
     def __init__(self, **kwargs):
         super().__init__()
 
         # Defaults
-        self.omega_dmb = self.omega_cdm
+        self.omega_dmeff = self.omega_cdm
         self.omega_cdm = 1e-10
-        self.m_dmb = 1.0  # GeV
-        self.sigma_dmb = 1e-40  # cm^2
-        self.Vrel_dmb = 30  # km/s at z ~ 1010
-        self.n_dmb = -4
+        self.m_dmeff = 1.0  # GeV
+        self.sigma_dmeff = 1e-40  # cm^2
+        self.Vrel_dmeff = 30  # km/s at z ~ 1010
+        self.npow_dmeff = -4
 
         self.__dict__.update(kwargs)
 
     @property
     def class_params(self):
         pars = super().class_params
-        pars.update({k: getattr(self, k) for k in ["omega_dmb", "m_dmb", "sigma_dmb", "n_dmb", "Vrel_dmb"]})
+        pars.update({k: getattr(self, k) for k in ["omega_dmeff", "m_dmeff", "sigma_dmeff", "npow_dmeff", "Vrel_dmeff"]})
         return pars
 
 
@@ -79,6 +79,7 @@ class ARESParams:
         cosmo=None,
         use_classy_pk=False,
         include_dm=False,
+        scattering_off_neutrals=True,
         verbose=True,
         initial_redshift=100,
         initial_timestep=0.001,
@@ -99,6 +100,7 @@ class ARESParams:
         self.kwargs = {}
         for kw in [
             "include_dm",
+            "scattering_off_neutrals",
             "verbose",
             "initial_redshift",
             "initial_timestep",
@@ -116,13 +118,13 @@ class ARESParams:
             self.kwargs["pop_ion_src_igm{1}"] = kwargs["pop_ion_src_igm{1}"]
             
         self.include_dm = self.kwargs["include_dm"]
-        if self.include_dm and not isinstance(cosmo, DMBParams):
-            raise ValueError("Must pass DMBParams if including DM.")
+        if self.include_dm and not isinstance(cosmo, DmeffParams):
+            raise ValueError("Must pass DmeffParams if including DM.")
 
-        if not self.include_dm and isinstance(cosmo, DMBParams):
+        if not self.include_dm and isinstance(cosmo, DmeffParams):
             self.include_dm = True
             self.kwargs["include_dm"] = True
-            # print("Using DMBParams.  Setting include_dm to True.")
+            # print("Using DmeffParams.  Setting include_dm to True.")
 
         self._classy = None
 
@@ -160,19 +162,19 @@ class ARESParams:
                 "z": thermo["z"],
                 "xe": thermo["x_e"],
                 "Tk": thermo["Tb [K]"],
-                "Tchi": thermo["T_dmb"],
-                "Vchib": self.cosmo.Vrel_dmb * 1e5 * self.kwargs["initial_redshift"] / 1010,
+                "Tchi": thermo["T_dmeff"],
+                "Vchib": self.cosmo.Vrel_dmeff * 1e5 * self.kwargs["initial_redshift"] / 1010,
             }
 
             params.update(
                 dict(
                     cosmology_name="user",
                     cosmology_inits=inputs,
-                    m_dmeff=self.cosmo.m_dmb,
-                    sigma_dmeff=self.cosmo.sigma_dmb,
-                    npow_dmb=self.cosmo.n_dmb,
+                    m_dmeff=self.cosmo.m_dmeff,
+                    sigma_dmeff=self.cosmo.sigma_dmeff,
+                    npow_dmeff=self.cosmo.npow_dmeff,
                 )
             )
-            params["omega_m_0"] = (self.cosmo.omega_dmb + self.cosmo.omega_b) / self.cosmo.h ** 2
+            params["omega_m_0"] = (self.cosmo.omega_dmeff + self.cosmo.omega_b) / self.cosmo.h ** 2
 
         return params
